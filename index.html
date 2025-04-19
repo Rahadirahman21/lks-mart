@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Halaman Login</title>
+    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css">
+</head>
+<body>
+    <div class="h-screen flex w-full ">
+        <div class="left flex-col w-1/2 bg-sky-900 text-5xl font-bold flex justify-center items-center">
+            <h1 class="text-white">LKS MART</h1>
+            <i class="fa-solid fa-2xl text-violet-950 fa-shop"></i>
+        </div>
+        <div class="right w-1/2">
+            <div class="p-30">
+                <h1 class="text-5xl text-blue-700">Sign In </h1><br>
+                <p class="mb-[100px] text-blue-700">Enter Your email and password to sign in!</p>
+                <h1 class="text-blue-700"> Email*</h1>
+                <input type="email"name="email" class="outline outline-slate-950 rounded w-130 h-10 mb-10"id="email">
+                
+                <h1 class="text-blue-700"> Password*</h1>
+                <input type="password"name="password" class="outline outline-slate-950 rounded w-130 h-10" id="password"><br>
+                <button class="w-65 h-10 bg-sky-800 mt-10 rounded text-white" onclick="login()">Login</button>
+                <button class="w-62 h-10 bg-yellow-700 mt-10 rounded text-white">Reset</button>
+            </div>
+        </div>
+    </div>
+    <script src="https://unpkg.com/@supabase/supabase-js@2"></script>
+    <script>
+        const supabaseUrl = "https://knewjcohlluabnvaltsx.supabase.co";
+        const supabaseKey = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImtuZXdqY29obGx1YWJudmFsdHN4Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDQ4NTg2MzQsImV4cCI6MjA2MDQzNDYzNH0.6Qvg1ZMYfFpwzNy3Ta3tzpdvU4HFAzVaroEvJ2z36i0";
+        const supabase = window.supabase.createClient(supabaseUrl, supabaseKey);
+        let userID;
+        async function login() {
+          const email = document.getElementById('email').value;
+          const password = document.getElementById('password').value;
+    
+          const { data, error } = await supabase
+            .from("tbl_user")
+            .select("*")
+            .eq('username', email)
+            .eq('password', password)
+            .maybeSingle();  // Akan menangani jika tidak ada data
+    
+          // Jika ada error dari Supabase
+          if (error) {
+            console.error("Supabase Error:", error.message);
+            alert('Login gagal: ' + error.message);
+            return;
+          }
+
+          // Jika tidak ada data yang ditemukan
+          if (!data) {
+            alert("Email atau password salah");
+            console.log(data)
+            return;
+          }
+
+          userID = data.id_user;
+          nama = data.nama;
+
+          localStorage.setItem("idUser",userID)
+
+          async function addLogs() {
+            const date = new Date();
+
+            const {data,error} = await supabase.from("tbl_log").insert([
+              {
+                waktu: date,
+                id_user: userID,
+                aktivitas: ` Login`
+                
+              }
+            ])
+            
+
+            return data;
+            
+          }
+
+          const result = addLogs();
+          console.log(result)
+    
+          // Jika data ditemukan, login berhasil
+          alert('Login berhasil!');
+          window.location.href = 'Admin/dashboard.html';
+        }
+      </script>
+</body>
+</html>

@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Halaman Login</title>
+    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+    <script src="https://unpkg.com/@supabase/supabase-js@2"></script>
+</head>
+<body>
+    <div class="h-screen flex w-200 ">
+        <div class="left w-1/2 bg-sky-900 flex flex-col justify-center items-center">
+            <div class="menu flex justify-between flex-col gap-40">
+
+                <h1 class="text-white text-5xl font-bold text-center">Admin</h1>
+                <ul>
+                    <li class="bg-slate-500 rounded text-white text-center mt-5 w-50 p-2 font-bold"><button><a href="KelolaUser/kelolaUser.html">Kelola User</a></button></li>
+                    <li class="bg-slate-500 rounded text-white text-center my-5 p-2 font-bold"><button><a href="KelolaLaporan/kelolaLaporan.html">Kelola Laporan</a></button></li>
+                    <li class="bg-slate-500 rounded text-white text-center p-2 font-bold"><button><a href="dashboard.html">Log Activity</a></button></li>
+                </ul>
+                <ul>
+
+                    <li class="bg-red-500 rounded text-white text-center p-1 font-bold mt-10 "><button><a onclick="logout()">Logout</a></button></li>
+                </ul>
+            </div>
+        </div>
+        <div class="right w-1/2">
+            <div class="p-5">
+                <p class="text-blue-800">Pages / Dashboard</p>
+                <h1 class="text-5xl font-bold mb-25 text-blue-800">LOG ACTIVITY </h1>
+                <table>
+                    <tr>
+                        <th>Dari Tanggal</th>
+                        <th>Sampai Tanggal</th>
+                    </tr>
+                    <tr>
+                        <td><input type="date" class="rounded bg-slate-200 w-40"id="startDate"></td>
+                        <td><input type="date" class="ms-5 rounded bg-slate-200 w-40"id="endDate"></td>
+                        <td><button class="ms-3 h-8 rounded-sm bg-blue-700 w-20 text-white"onclick="filterLog()">Filter</button></td>
+                    </tr>
+
+                </table>
+            </div>
+            <div class="p-5">
+                <table class="border w-270 text-center"id="log">
+                    <tr>
+                        <th>No</th>
+                        <th>Username</th>
+                        <th>Waktu</th>
+                        <th>Aktivitas</th>
+                    </tr>
+                
+                </table>
+            </div>
+        </div>
+    </div>
+    <script>
+        // Inisialisasi Supabase
+        const supabaseUrl = "https://knewjcohlluabnvaltsx.supabase.co";
+        const supabaseKey = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImtuZXdqY29obGx1YWJudmFsdHN4Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDQ4NTg2MzQsImV4cCI6MjA2MDQzNDYzNH0.6Qvg1ZMYfFpwzNy3Ta3tzpdvU4HFAzVaroEvJ2z36i0";
+        const supabase = window.supabase.createClient(supabaseUrl, supabaseKey);
+        async function dataLog() {
+            const { data, error } = await supabase.from('tbl_log').select('*,tbl_user(*)');
+            console.log(data)
+            if (error) {
+                alert("Error: " + error.message);
+                return;
+            }
+
+            const table = document.getElementById('log');
+            table.innerHTML = `
+                <tr>
+                    <th>No</th>
+                    <th>Username</th>
+                    <th>Waktu</th>
+                    <th>Aktivitas</th>
+                </tr>
+            `;
+            data.forEach((user, index) => {
+                const row = document.createElement('tr');
+                row.innerHTML = `
+                    <td>${index + 1}</td>
+                    <td>${user.tbl_user.username}</td>
+                    <td>${user.created_at}</td>
+                    <td>${user.aktivitas}</td>
+                `;
+                table.appendChild(row);
+            });
+        }
+
+        // Panggil loadUsers saat halaman dimuat
+        dataLog();
+        function filterLog() {
+    const startDate = document.getElementById('startDate').value;
+    const endDate = document.getElementById('endDate').value;
+    dataLog(startDate, endDate); // panggil fungsi utama dengan filter tanggal
+}
+
+async function logout() {
+
+    const userID = localStorage.getItem("idUser");
+    const date = new Date();
+
+    const {d,e } = await supabase.from('tbl_log').insert([{
+        id_user: userID,
+        aktivitas: "Logout",
+        waktu: date,
+
+    }])
+
+    if(!e){
+        localStorage.removeItem("idUser");
+        window.location.href = "../index.html"
+        return
+    }
+    return
+}
+
+
+    </script>
+</body>
+</html>

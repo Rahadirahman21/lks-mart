@@ -1,0 +1,242 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Halaman Login</title>
+    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+    <script src="https://unpkg.com/@supabase/supabase-js@2"></script>
+</head>
+<body>
+    <div class="h-[1000px] flex w-200 ">
+        <div class="left w-1/2 bg-sky-900 flex flex-col justify-center items-center  h-[100%]">
+            <div class="menu flex justify-between flex-col gap-40">
+                <h1 class="text-white text-5xl font-bold text-center">Admin</h1>
+                <ul>
+                    <li class="bg-slate-500 rounded text-white text-center mt-5 w-50 p-2 font-bold">
+                        <button><a href="kelolaUser.html">Kelola User</a></button>
+                    </li>
+                    <li class="bg-slate-500 rounded text-white text-center my-5 p-2 font-bold">
+                        <button><a href="../KelolaLaporan/kelolaLaporan.html">Kelola Laporan</a></button>
+                    </li>
+                    <li class="bg-slate-500 rounded text-white text-center p-2 font-bold">
+                        <button><a href="../dashboard.html">Log Activity</a></button>
+                    </li>
+                </ul>
+                <ul>
+                    <li class="bg-red-500 rounded text-white text-center p-1 font-bold mt-10 ">
+                        <button><a href="../../index.html">Logout</a></button>
+                    </li>
+                </ul>
+            </div>
+        </div>
+        <div class="right w-1/2">
+            <div class="p-3">
+                <p class="text-blue-800">Pages / Dashboard</p><br>
+                <h1 class="text-5xl font-bold mb-5 text-blue-800">KELOLA USER</h1>
+                <div class="flex main-content ms-30">
+                    <div class="text-xl font-bold p-1">
+                        <form id="userForm">
+                            <h1 class="mb-3">Type User</h1>
+                            <select id="userType" class="rounded-3xl mb-3 bg-slate-300 w-100 p-1">
+                                <option value="">Pilih</option>
+                                <option value="gudang">Gudang</option>
+                                <option value="kasir">Kasir</option>
+                                <option value="Admin">Admin</option>
+                            </select><br>
+                            <h1 class="mb-3">Nama</h1>
+                            <input type="text" id="userName" class=" rounded-3xl mb-3 bg-slate-300 w-100 p-1"><br>
+                            <h1 class="mb-3">Telepon</h1>
+                            <input type="number" id="userPhone" class=" rounded-3xl bg-slate-300 w-100 p-1"><br>
+                            <h1 class="mb-3">Alamat</h1>
+                            <input type="text" id="userAddress" class="mb-3 rounded-3xl bg-slate-300 w-100 p-1">
+                        </form>
+                    </div>
+                    <div class="text-xl font-bold ms-10">
+                        <form>
+                            <input type="hidden" id="userId"> <!-- Tambahkan ini -->
+
+                            <h1 class="mb-3">Username</h1>
+                            <input type="text" id="username" class=" rounded-3xl mb-3 bg-slate-300 w-100 p-1"><br>
+                            <h1 class="mb-3">Password</h1>
+                            <input type="password" id="password" class=" rounded-3xl bg-slate-300 w-100 p-1"><br>
+                            <button type="button" onclick="addUser()" class="mt-10 rounded bg-green-700 w-30 h-10 text-white">Tambah</button>
+                            <button type="button" onclick="updateUser()" class="mt-10 rounded bg-green-700 w-30 h-10 text-white">Update</button>
+                        </form>
+                    </div>
+                </div>
+                <div class="p-5">
+                    <table class="border w-270 text-center" id="userTable">
+                        <tr>
+                            <th>No</th>
+                            <th>Username</th>
+                            <th>Waktu</th>
+                            <th>Aktivitas</th>
+                        </tr>
+
+                        <!-- Data pengguna akan ditambahkan di sini -->
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Inisialisasi Supabase
+        const supabaseUrl = "https://knewjcohlluabnvaltsx.supabase.co";
+        const supabaseKey = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImtuZXdqY29obGx1YWJudmFsdHN4Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDQ4NTg2MzQsImV4cCI6MjA2MDQzNDYzNH0.6Qvg1ZMYfFpwzNy3Ta3tzpdvU4HFAzVaroEvJ2z36i0";
+        const supabase = window.supabase.createClient(supabaseUrl, supabaseKey);
+    
+        // Menambahkan pengguna baru
+async function addUser() {
+    const username = document.getElementById('username').value;
+    const password = document.getElementById('password').value;
+    const userType = document.getElementById('userType').value;
+    const userName = document.getElementById('userName').value;
+    const userPhone = document.getElementById('userPhone').value;
+    const userAddress = document.getElementById('userAddress').value;
+
+    const { data, error } = await supabase
+        .from('tbl_user')
+        .insert([
+            {
+                username: username,
+                password: password,
+                tipe_user: userType,
+                nama: userName,
+                telepon: userPhone,
+                alamat: userAddress
+            }
+        ]);
+
+    if (error) {
+        alert('Gagal menambahkan data: ' + error.message);
+        console.error(error);
+    } else {
+        alert('Data berhasil ditambahkan!');
+        console.log(data);
+        
+        // Jika kamu punya fungsi loadUser(), kamu bisa panggil di sini agar data langsung refresh
+         loadUser();
+    }
+}
+
+
+        // Mengedit pengguna
+        async function editUser(user) {
+    document.getElementById('userId').value = user.id_user; // pastikan sesuai dengan nama kolom id di database
+    document.getElementById('username').value = user.username;
+    document.getElementById('password').value = user.password;
+    document.getElementById('userType').value = user.tipe_user;
+    document.getElementById('userName').value = user.nama;
+    document.getElementById('userPhone').value = user.telepon;
+    document.getElementById('userAddress').value = user.alamat;
+}
+
+// Fungsi untuk memperbarui data pengguna
+async function updateUser() {
+    const userId = document.getElementById('userId').value;
+    const username = document.getElementById('username').value;
+    const password = document.getElementById('password').value;
+    const userType = document.getElementById('userType').value;
+    const userName = document.getElementById('userName').value;
+    const userPhone = document.getElementById('userPhone').value;
+    const userAddress = document.getElementById('userAddress').value;
+
+    const { data, error } = await supabase
+        .from('tbl_user')
+        .update({
+            username: username,
+            password: password,
+            tipe_user: userType,
+            nama: userName,
+            telepon: userPhone,
+            alamat: userAddress
+        })
+        .eq('id_user', userId); // Gunakan kolom ID yang sesuai di database kamu
+
+    if (error) {
+        alert("Gagal memperbarui data: " + error.message);
+    } else {
+        alert("Data pengguna berhasil diperbarui!");
+        loadUsers(); // Refresh data di tabel
+    }
+}
+
+
+
+
+async function deleteUser(userId) {
+    const { error } = // Hapus log dulu
+await supabase
+    .from('tbl_log')
+    .delete()
+    .eq('id_user', userId);
+
+// Baru hapus user
+await supabase
+    .from('tbl_user')
+    .delete()
+    .eq('id_user', userId);
+ // pastikan ini sesuai nama kolom ID di database
+
+    if (error) {
+        alert("Gagal menghapus data: " + error.message);
+    } else {
+        alert("Pengguna berhasil dihapus");
+        loadUsers(); // refresh tabel
+    }
+}
+
+
+
+        // Memuat data pengguna dari database
+        async function loadUsers() {
+            const { data, error } = await supabase.from('tbl_user').select('*');
+            
+            if (error) {
+                alert("Error: " + error.message);
+                return;
+            }
+
+            const table = document.getElementById('userTable');
+            table.innerHTML = `
+                <tr>
+                    <th>No</th>
+                    <th>type user</th>
+                    <th>Nama User</th>
+                    <th>Alamat</th>
+                    <th>Telepon</th>
+                    <th>Email</th>
+                    <th>Aksi</th>
+                </tr>
+            `;
+            data.forEach((user, index) => {
+                const row = document.createElement('tr');
+                row.innerHTML = `
+                    <td>${index + 1}</td>
+                    <td>${user.tipe_user}</td>
+                    <td>${user.nama}</td>
+                    <td>${user.alamat}</td>
+                    <td>${user.telepon}</td>
+                    <td>${user.username}</td>
+
+                            
+                    <button type="button" onclick='editUser(${JSON.stringify(user)})' class="ms-2 mb-2 rounded bg-yellow-700 w-20 h-8 text-white">Edit</button>
+                    <button type="button" onclick='deleteUser(${user.id_user})' class="ms-2 rounded bg-red-700 w-20 h-8 text-white">Hapus</button>
+                
+                `;
+                table.appendChild(row);
+            });
+        }
+        // Tambah input hidden untuk menyimpan id_user
+    const hiddenIdInput = document.createElement("input");
+    hiddenIdInput.type = "hidden";
+    hiddenIdInput.id = "userId";
+    document.body.appendChild(hiddenIdInput);
+
+        // Panggil loadUsers saat halaman dimuat
+        loadUsers();
+    </script>
+</body>
+</html>
