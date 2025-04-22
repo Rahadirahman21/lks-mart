@@ -5,6 +5,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Halaman Login</title>
     <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+    <link href="https://cdn.jsdelivr.net/npm/daisyui@5" rel="stylesheet" type="text/css" />
+    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
     <script src="https://unpkg.com/@supabase/supabase-js@2"></script>
 
 </head>
@@ -15,13 +17,12 @@
 
                 <h1 class="text-white text-5xl font-bold text-center">Admin</h1>
                 <ul>
-                    <li class="bg-slate-500 rounded text-white text-center mt-5 w-50 p-2 font-bold"><button><a href="../KelolaUser/kelolaUser.html">Kelola User</a></button></li>
-                    <li class="bg-slate-500 rounded text-white text-center my-5 p-2 font-bold"><button><a href="kelolaLaporan.html">Kelola Laporan</a></button></li>
-                    <li class="bg-slate-500 rounded text-white text-center p-2 font-bold"><button><a href="../dashboard.html">Log Activity</a></button></li>
+                    <li ><a href="../kelolaUser/kelolaUser.html"class="bg-slate-500 btn text-white  mt-5 w-50 p-2 font-bold">Kelola User</a></li>
+                    <li ><a href="kelolaLaporan.html"class="bg-slate-500 btn text-white  my-5 p-2 font-bold w-50" >Kelola Laporan</a></li>
+                    <li ><a href="../logAktivitas.html"class="bg-slate-500 btn text-white  p-2 font-bold">Log Activity</a></li>
                 </ul>
                 <ul>
-
-                    <li class="bg-red-500 rounded text-white text-center p-1 font-bold mt-10 "><button><a href="../../index.html">Logout</a></button></li>
+                    <li ><a onclick="logout('../../')"class="bg-red-500 btn text-white p-1 font-bold mt-10 w-50">Logout</a></li>
                 </ul>
             </div>
         </div>
@@ -30,53 +31,58 @@
                 <p class="text-blue-800">Pages / Dashboard</p><br>
                 <h1 class="text-5xl font-bold text-blue-800">KELOLA LAPORAN</h1>
                 <div class="p-5">
-                    <table class="border w-270 text-center"id="log">
+                    <table class="border w-270 text-center"id="transaksi">
                         <tr>
                             <th>No</th>
-                            <th>Username</th>
-                            <th>Waktu</th>
-                            <th>Aktivitas</th>
+                            <th>No Transaksi</th>
+                            <th>Tanggal Transaksi</th>
+                            <th>Total Penjualan</th>
+                            <th>Nama Kasir</th>
+                            <th>Nama Pelanggan</th>
                         </tr>
                     </table>
                 </div>
             </div>
         </div>
     </div>
+    <script src="../../logout.js"></script>
     <script>
         // Inisialisasi Supabase
         const supabaseUrl = "https://knewjcohlluabnvaltsx.supabase.co";
         const supabaseKey = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImtuZXdqY29obGx1YWJudmFsdHN4Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDQ4NTg2MzQsImV4cCI6MjA2MDQzNDYzNH0.6Qvg1ZMYfFpwzNy3Ta3tzpdvU4HFAzVaroEvJ2z36i0";
         const supabase = window.supabase.createClient(supabaseUrl, supabaseKey);
         async function dataLog() {
-            const { data, error } = await supabase.from('tbl_log').select('*,tbl_user(*)');
+            const { data, error } = await supabase.from('tbl_transaksi').select('*,tbl_user(*),tbl_barang(*),tbl_pelanggan(*)');
             console.log(data)
-            if (error) {
-                alert("Error: " + error.message);
+            if(error){
+                alert("error;"+error.message);
                 return;
             }
-
-            const table = document.getElementById('log');
+            const table = document.getElementById('transaksi');
             table.innerHTML = `
-                <tr>
-                    <th>No</th>
-                    <th>Username</th>
-                    <th>Waktu</th>
-                    <th>Aktivitas</th>
-                </tr>
+            <tr>
+                <th>No</th>
+                        <th>No Transaksi</th>
+                        <th>Tanggal Transaksi</th>
+                        <th>Total Penjualan</th>
+                        <th>Nama Kasir</th>
+                        <th>Nama Pelanggan</th>
+                    </tr>
             `;
-            data.forEach((user, index) => {
+            data.forEach((user,index)=>{
                 const row = document.createElement('tr');
-                row.innerHTML = `
-                    <td>${index + 1}</td>
-                    <td>${user.tbl_user.username}</td>
-                    <td>${user.created_at}</td>
-                    <td>${user.aktivitas}</td>
+                row.innerHTML =`
+                <td>${index + 1}</td>
+                <td>${user.no_transaksi}</td>
+                <td>${user.tgl_transaksi}</td>
+                <td>${user.total_bayar}</td>
+                <td>${user.nama_kasir}</td>
+                <td>${user.tbl_pelanggan.nama}</td>
                 `;
                 table.appendChild(row);
             });
+            
         }
-
-        // Panggil loadUsers saat halaman dimuat
         dataLog();
     </script>
 </body>

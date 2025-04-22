@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Halaman Login</title>
+    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+    <link href="https://cdn.jsdelivr.net/npm/daisyui@5" rel="stylesheet" type="text/css" />
+    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+    <script src="https://unpkg.com/@supabase/supabase-js@2"></script>
+</head>
+<body>
+    <div class="h-[1000px] flex w-200">
+        <div class="left w-1/2 bg-sky-900 flex flex-col justify-center items-center">
+            <div class="menu flex justify-between flex-col gap-40">
+
+                <h1 class="text-white text-5xl font-bold text-center">Admin</h1>
+                <ul>
+                    <li ><a href="kelolaUser/kelolaUser.html"class="bg-slate-500 btn text-white  mt-5 w-50 p-2 font-bold">Kelola User</a></li>
+                    <li ><a href="KelolaLaporan/kelolaLaporan.html"class="bg-slate-500 btn text-white  my-5 p-2 font-bold w-50" >Kelola Laporan</a></li>
+                    <li ><a href="logAktivitas.html"class="bg-slate-500 btn text-white  p-2 font-bold">Log Activity</a></li>
+                </ul>
+                <ul>
+                    <li ><a onclick="logout('../')"class="bg-red-500 btn text-white p-1 font-bold mt-10 w-50">Logout</a></li>
+                </ul>
+            </div>
+        </div>
+        <div class="right w-1/2">
+            <div class="p-5">
+                <p class="text-blue-800">Pages / Dashboard</p>
+                <h1 class="text-5xl font-bold mb-25 text-blue-800">LOG ACTIVITY </h1>
+                <table>
+                    <tr>
+                        <th>Dari Tanggal</th>
+                        <th>Sampai Tanggal</th>
+                    </tr>
+                    <tr>
+                        <td><input type="date" class="rounded bg-slate-200 w-40"id="startDate"></td>
+                        <td><input type="date" class="ms-5 rounded bg-slate-200 w-40"id="endDate"></td>
+                        <td><button class="ms-3 h-8 rounded-sm bg-blue-700 w-20 text-white"onclick="filterLog()">Filter</button></td>
+                    </tr>
+
+                </table>
+            </div>
+            <div class="p-5">
+                <table class="border w-270 text-center"id="log">
+                    <tr>
+                        <th>No</th>
+                        <th>Username</th>
+                        <th>Waktu</th>
+                        <th>Aktivitas</th>
+                    </tr>
+                
+                </table>
+            </div>
+        </div>
+    </div>
+    <script src="../logout.js"></script>
+    <script>
+        // Inisialisasi Supabase
+        const supabaseUrl = "https://knewjcohlluabnvaltsx.supabase.co";
+        const supabaseKey = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImtuZXdqY29obGx1YWJudmFsdHN4Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDQ4NTg2MzQsImV4cCI6MjA2MDQzNDYzNH0.6Qvg1ZMYfFpwzNy3Ta3tzpdvU4HFAzVaroEvJ2z36i0";
+        const supabase = window.supabase.createClient(supabaseUrl, supabaseKey);
+        async function dataLog() {
+            const { data, error } = await supabase.from('tbl_log').select('*,tbl_user(*)');
+            console.log(data)
+            if (error) {
+                alert("Error: " + error.message);
+                return;
+            }
+
+            const table = document.getElementById('log');
+            table.innerHTML = `
+                <tr>
+                    <th>No</th>
+                    <th>Username</th>
+                    <th>Waktu</th>
+                    <th>Aktivitas</th>
+                </tr>
+            `;
+            data.forEach((user, index) => {
+                const row = document.createElement('tr');
+                row.innerHTML = `
+                    <td>${index + 1}</td>
+                    <td>${user.tbl_user.username}</td>
+                    <td>${user.created_at}</td>
+                    <td>${user.aktivitas}</td>
+                `;
+                table.appendChild(row);
+            });
+        }
+
+        // Panggil loadUsers saat halaman dimuat
+        dataLog();
+        function filterLog() {
+    const startDate = document.getElementById('startDate').value;
+    const endDate = document.getElementById('endDate').value;
+    dataLog(startDate, endDate); // panggil fungsi utama dengan filter tanggal
+}
+
+
+
+
+    </script>
+</body>
+</html>

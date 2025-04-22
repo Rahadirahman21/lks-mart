@@ -5,22 +5,24 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Halaman Login</title>
     <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+    <link href="https://cdn.jsdelivr.net/npm/daisyui@5" rel="stylesheet" type="text/css" />
+    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
     <script src="https://unpkg.com/@supabase/supabase-js@2"></script>
 </head>
 <body>
-    <div class="h-screen flex w-200 ">
+    <div class="h-[1000px] flex w-200">
         <div class="left w-1/2 bg-sky-900 flex flex-col justify-center items-center">
             <div class="menu flex justify-between flex-col gap-40">
 
                 <h1 class="text-white text-5xl font-bold text-center">Admin</h1>
                 <ul>
-                    <li class="bg-slate-500 rounded text-white text-center mt-5 w-50 p-2 font-bold"><button><a href="KelolaUser/kelolaUser.html">Kelola User</a></button></li>
-                    <li class="bg-slate-500 rounded text-white text-center my-5 p-2 font-bold"><button><a href="KelolaLaporan/kelolaLaporan.html">Kelola Laporan</a></button></li>
-                    <li class="bg-slate-500 rounded text-white text-center p-2 font-bold"><button><a href="dashboard.html">Log Activity</a></button></li>
+                    <li ><a href="kelolaUser/kelolaUser.html"class="bg-slate-500 btn text-white  mt-5 w-50 p-2 font-bold">Kelola User</a></li>
+                    <li ><a href="KelolaLaporan/kelolaLaporan.html"class="bg-slate-500 btn text-white  my-5 p-2 font-bold w-50" >Kelola Laporan</a></li>
+                    <li ><a href="logAktivitas.html"class="bg-slate-500 btn text-white  p-2 font-bold">Log Activity</a></li>
                 </ul>
                 <ul>
 
-                    <li class="bg-red-500 rounded text-white text-center p-1 font-bold mt-10 "><button><a onclick="logout()">Logout</a></button></li>
+                    <li ><a onclick="logout('../')"class="bg-red-500 btn text-white p-1 font-bold mt-10 w-50">Logout</a></li>
                 </ul>
             </div>
         </div>
@@ -54,6 +56,7 @@
             </div>
         </div>
     </div>
+    <script src="../logout.js"></script>
     <script>
         // Inisialisasi Supabase
         const supabaseUrl = "https://knewjcohlluabnvaltsx.supabase.co";
@@ -96,25 +99,7 @@
     dataLog(startDate, endDate); // panggil fungsi utama dengan filter tanggal
 }
 
-async function logout() {
 
-    const userID = localStorage.getItem("idUser");
-    const date = new Date();
-
-    const {d,e } = await supabase.from('tbl_log').insert([{
-        id_user: userID,
-        aktivitas: "Logout",
-        waktu: date,
-
-    }])
-
-    if(!e){
-        localStorage.removeItem("idUser");
-        window.location.href = "../index.html"
-        return
-    }
-    return
-}
 
 
     </script>

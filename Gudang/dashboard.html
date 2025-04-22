@@ -10,71 +10,64 @@
     <script src="https://unpkg.com/@supabase/supabase-js@2"></script>
 </head>
 <body>
-    <div class="h-[1000px] flex w-200 ">
-        <div class="left w-1/2 bg-sky-900 flex flex-col justify-center items-center  h-[100%]">
+    <div class="h-[1000px] flex w-200">
+        <div class="left w-1/2 bg-sky-900 flex flex-col justify-center items-center">
             <div class="menu flex justify-between flex-col gap-40">
-                <h1 class="text-white text-5xl font-bold text-center">Admin</h1>
+
+                <h1 class="text-white text-5xl font-bold text-center">Gudang</h1>
                 <ul>
-                    <li ><a href="kelolaUser.html"class="bg-slate-500 btn text-white  mt-5 w-50 p-2 font-bold">Kelola User</a></li>
-                    <li ><a href="../kelolaLaporan/kelolaLaporan.html"class="bg-slate-500 btn text-white  my-5 p-2 font-bold w-50" >Kelola Laporan</a></li>
-                    <li ><a href="../logAktivitas.html"class="bg-slate-500 btn text-white  p-2 font-bold">Log Activity</a></li>
+                    <h1 class="font-bold text-white text-2xl">KELOLA GUDANG</h1>
                 </ul>
                 <ul>
-                    <li ><a onclick="logout('../../')"class="bg-red-500 btn text-white p-1 font-bold mt-10 w-50">Logout</a></li>
+
+                    <li ><a onclick="logout('../')"class="bg-red-500 btn text-white p-1 font-bold mt-10 w-50">Logout</a></li>
                 </ul>
             </div>
         </div>
         <div class="right w-1/2">
-            <div class="p-3">
-                <p class="text-blue-800">Pages / Dashboard</p><br>
-                <h1 class="text-5xl font-bold mb-5 text-blue-800">KELOLA USER</h1>
-                <div class="flex main-content ms-30">
-                    <div class="text-xl font-bold p-1">
-                        <form id="userForm">
-                            <h1 class="mb-3">Type User</h1>
-                            <select id="userType" class="rounded-3xl mb-3 bg-slate-300 w-100 p-1">
-                                <option value="">Pilih</option>
-                                <option value="gudang">Gudang</option>
-                                <option value="kasir">Kasir</option>
-                                <option value="Admin">Admin</option>
-                            </select><br>
-                            <h1 class="mb-3">Nama</h1>
-                            <input type="text" id="userName" class=" rounded-3xl mb-3 bg-slate-300 w-100 p-1"><br>
-                            <h1 class="mb-3">Telepon</h1>
-                            <input type="number" id="userPhone" class=" rounded-3xl bg-slate-300 w-100 p-1"><br>
-                            <h1 class="mb-3">Alamat</h1>
-                            <input type="text" id="userAddress" class="mb-3 rounded-3xl bg-slate-300 w-100 p-1">
-                        </form>
-                    </div>
-                    <div class="text-xl font-bold ms-10">
-                        <form>
-                            <input type="hidden" id="userId"> <!-- Tambahkan ini -->
-
-                            <h1 class="mb-3">Username</h1>
-                            <input type="text" id="username" class=" rounded-3xl mb-3 bg-slate-300 w-100 p-1"><br>
-                            <h1 class="mb-3">Password</h1>
-                            <input type="password" id="password" class=" rounded-3xl bg-slate-300 w-100 p-1"><br>
-                            <button type="button" onclick="addUser()" class="mt-10 rounded bg-green-700 w-30 h-10 text-white">Tambah</button>
-                            <button type="button" onclick="updateUser()" class="mt-10 rounded bg-green-700 w-30 h-10 text-white">Update</button>
-                        </form>
-                    </div>
+            <div class="p-5">
+                <p class="text-blue-800">Pages / Dashboard</p>
+                <h1 class="text-5xl font-bold mb-25 text-blue-800">KELOLA BARANG</h1>
+                <div class="flex main-content">
+                    <div class="text-xl">
+                    <h1 class="w-50 font-bold mb-8">Kode Barang</h1>
+                    <h1 class="w-50 font-bold mb-8">Jumlah Barang</h1>
+                    <h1 class="w-50 font-bold mb-8">Nama Barang</h1>
+                    <h1 class="w-50 font-bold mb-8">Satuan</h1>
+                    <h1 class="w-50 font-bold mb-8">Expired Date</h1>
+                    <h1 class="w-50 font-bold ">Harga Satuan</h1>
+                    
                 </div>
-                <div class="p-5">
-                    <table class="border w-270 text-center" id="userTable">
-                        <tr>
-                            <th>No</th>
-                            <th>Username</th>
-                            <th>Waktu</th>
-                            <th>Aktivitas</th>
-                        </tr>
-
-                        <!-- Data pengguna akan ditambahkan di sini -->
-                    </table>
+                <div class="form">
+                    <input type="hidden" id="userId">
+                    <input type="text" class="input w-100 mb-5">
+                    <input type="number" class="input w-100 mb-5">
+                    <input type="text" class="input w-100 mb-5">
+                    <input type="text" class="input w-100 mb-5">
+                    <input type="date" class="input w-100 mb-5">
+                    <input type="number" class="input w-100 mb-5">
                 </div>
+                <div><h1>kjashkfhkj</h1></div>
+            </div>
+                
+            </div>
+            <div class="p-5">
+                <table class="border w-270 text-center"id="barang">
+                    <tr>
+                        <th>ID Barang</th>
+                        <th>Kode Barang</th>
+                        <th>Nama Barang</th>
+                        <th>Expired Date</th>
+                        <th>Jumlah Barang</th>
+                        <th>Satuan</th>
+                        <th>Harga Satuan</th>
+                    </tr>
+                
+                </table>
             </div>
         </div>
     </div>
-    <script  src="../../logout.js"></script>
+    <script src="../logout.js"></script>
     <script>
         // Inisialisasi Supabase
         const supabaseUrl = "https://knewjcohlluabnvaltsx.supabase.co";
@@ -181,38 +174,39 @@ await supabase
 
         // Memuat data pengguna dari database
         async function loadUsers() {
-            const { data, error } = await supabase.from('tbl_user').select('*');
+            const { data, error } = await supabase.from('tbl_barang').select('*');
             
             if (error) {
                 alert("Error: " + error.message);
                 return;
             }
 
-            const table = document.getElementById('userTable');
+            const table = document.getElementById('barang');
             table.innerHTML = `
                 <tr>
-                    <th>No</th>
-                    <th>type user</th>
-                    <th>Nama User</th>
-                    <th>Alamat</th>
-                    <th>Telepon</th>
-                    <th>Email</th>
-                    <th>Aksi</th>
-                </tr>
+                        <th>ID Barang</th>
+                        <th>Kode Barang</th>
+                        <th>Nama Barang</th>
+                        <th>Expired Date</th>
+                        <th>Jumlah Barang</th>
+                        <th>Satuan</th>
+                        <th>Harga Satuan</th>
+                    </tr>
             `;
             data.forEach((user, index) => {
                 const row = document.createElement('tr');
                 row.innerHTML = `
                     <td>${index + 1}</td>
-                    <td>${user.tipe_user}</td>
-                    <td>${user.nama}</td>
-                    <td>${user.alamat}</td>
-                    <td>${user.telepon}</td>
-                    <td>${user.username}</td>
+                    <td>${user.kode_barang}</td>
+                    <td>${user.nama_barang}</td>
+                    <td>${user.expired_date}</td>
+                    <td>${user.jumlah_barang}</td>
+                    <td>${user.satuan}</td>
+                    <td>${user.harga_satuan}</td>
 
                             
                     <button type="button" onclick='editUser(${JSON.stringify(user)})' class="ms-2 mb-2 rounded bg-yellow-700 w-20 h-8 text-white">Edit</button>
-                    <button type="button" onclick='deleteUser(${user.id_user})' class="ms-2 rounded bg-red-700 w-20 h-8 text-white">Hapus</button>
+                    <button type="button" onclick='deleteUser(${user.id_barang})' class="ms-2 rounded bg-red-700 w-20 h-8 text-white">Hapus</button>
                 
                 `;
                 table.appendChild(row);
